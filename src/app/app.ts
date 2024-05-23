@@ -5,7 +5,12 @@ import routes from "./routes";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
 
 const app: Application = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://blogify1.vercel.app"],
+    credentials: true,
+  })
+);
 
 //parser
 app.use(express.json());

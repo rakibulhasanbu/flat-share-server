@@ -2,25 +2,18 @@ import { Request, Response } from "express";
 import { userService } from "./user.sevice";
 import sendResponse from "../../utils/sendResponse";
 import { CatchAsync } from "../../utils/CatchAsync";
+import httpStatus from "http-status";
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    //console.log(req.body);
-    const result = await userService.createUserIntoBD(req.body);
-    res.status(201).json({
-      success: true,
-      statusCode: 201,
-      message: "User registered successfully",
-      data: result,
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err?.name || "Something went wrong",
-      error: err,
-    });
-  }
-};
+const createUser = CatchAsync(async (req: Request, res: Response) => {
+  const result = await userService.createUserIntoBD(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User registered successfully",
+    data: result,
+  });
+});
 
 const getProfile = CatchAsync(
   async (req: Request & { user?: any }, res: Response) => {
@@ -29,7 +22,7 @@ const getProfile = CatchAsync(
     const result = await userService.getProfileFromDB(user);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: httpStatus.OK,
       success: true,
       message: "User profile retrieved successfully",
       data: result,
@@ -44,7 +37,7 @@ const updateProfile = CatchAsync(
     const result = await userService.UpdateProfileIntoDB(user, req.body);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: httpStatus.OK,
       success: true,
       message: "User profile updated successfully",
       data: result,
