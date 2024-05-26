@@ -57,13 +57,12 @@ model Flat {
   id                   String       @id @default(uuid())
   location             String
   description          String
-  rentAmount           Int
+  amount               Int
   squareFeet           Int
   totalBedrooms        Int
   totalRooms           Int
   amenities            String[]
   photos               String[]
-  utilitiesDescription String
   availability         Boolean      @default(true)
   advanceAmount        Int
   createdAt            DateTime     @default(now())

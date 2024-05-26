@@ -1,30 +1,34 @@
 import prisma from "../../utils/prisma";
 
-const createFlatIntoBD = async (payload: any) => {
+const createFlatIntoBD = async (user: any, payload: any) => {
   const {
     squareFeet,
     totalBedrooms,
     totalRooms,
-    utilitiesDescription,
     location,
     description,
-    rent,
+    amount,
+    amenities,
+    photos,
     advanceAmount,
+    postedById = user?.userId,
     availability = true,
   } = payload;
 
   // Create the found item
   const createFlat = await prisma.flat.create({
     data: {
-      advanceAmount,
-      availability,
-      description,
       location,
-      rent,
+      description,
+      amount,
       squareFeet,
       totalBedrooms,
       totalRooms,
-      utilitiesDescription,
+      amenities,
+      photos,
+      advanceAmount,
+      availability,
+      postedById,
     },
   });
 
@@ -91,6 +95,26 @@ const getFlatsFromDB = async (query: any) => {
   return responseData;
 };
 
+const getMyFlatFromDB = async (user: any) => {
+  // Update the Blog status
+  const blog = await prisma.flat.findMany({
+    where: {
+      postedById: user?.userId,
+    },
+    include: {
+      postedBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return blog;
+};
+
 const UpdateFlatByIdIntoDB = async (id: any, params: any) => {
   const {
     advanceAmount,
@@ -114,19 +138,27 @@ const UpdateFlatByIdIntoDB = async (id: any, params: any) => {
       availability,
       description,
       location,
-      rent,
       squareFeet,
       totalBedrooms,
       totalRooms,
-      utilitiesDescription,
     },
   });
 
   return updatedFlat;
 };
 
+const deleteFlatByIdIntoDB = async (id: any) => {
+  return await prisma.flat.delete({
+    where: {
+      id: id,
+    },
+  });
+};
+
 export const FlatService = {
   createFlatIntoBD,
   getFlatsFromDB,
   UpdateFlatByIdIntoDB,
+  deleteFlatByIdIntoDB,
+  getMyFlatFromDB,
 };

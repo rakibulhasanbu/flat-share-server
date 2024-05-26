@@ -2,13 +2,14 @@ import { z } from "zod";
 
 const flatSchema = z.object({
   body: z.object({
+    location: z.string(),
+    description: z.string(),
+    amount: z.number().int().positive(),
     squareFeet: z.number().int().positive(),
     totalBedrooms: z.number().int().positive().min(1),
     totalRooms: z.number().int().positive().min(1),
-    utilitiesDescription: z.string(),
-    location: z.string(),
-    description: z.string(),
-    rent: z.number().int().positive(),
+    amenities: z.string().array(),
+    photos: z.string().array(),
     advanceAmount: z.number().int().positive(),
   }),
 });

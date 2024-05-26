@@ -4,9 +4,11 @@ CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "role" TEXT DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -43,13 +45,12 @@ CREATE TABLE "flats" (
     "id" TEXT NOT NULL,
     "location" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "rentAmount" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
     "squareFeet" INTEGER NOT NULL,
     "totalBedrooms" INTEGER NOT NULL,
     "totalRooms" INTEGER NOT NULL,
     "amenities" TEXT[],
     "photos" TEXT[],
-    "utilitiesDescription" TEXT NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT true,
     "advanceAmount" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

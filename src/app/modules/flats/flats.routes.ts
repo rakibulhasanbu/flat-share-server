@@ -14,6 +14,8 @@ router.post(
   FlatController.createFlat
 );
 
+router.get("/my-flats", auth(), FlatController.getMyFlats);
+
 router.get("/flats", FlatController.getFlats);
 
 router.put(
@@ -22,5 +24,7 @@ router.put(
   auth(),
   FlatController.updateFlatById
 );
+
+router.delete("/flat/:flatId", auth(), FlatController.deleteFlatById);
 
 export const FlatsRoutes = router;
