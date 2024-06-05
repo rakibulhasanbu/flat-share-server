@@ -121,11 +121,12 @@ const UpdateFlatByIdIntoDB = async (id: any, params: any) => {
     availability,
     description,
     location,
-    rent,
+    amount,
     squareFeet,
     totalBedrooms,
     totalRooms,
-    utilitiesDescription,
+    amenities,
+    photos,
   } = params;
 
   // Update the Flat status
@@ -138,13 +139,24 @@ const UpdateFlatByIdIntoDB = async (id: any, params: any) => {
       availability,
       description,
       location,
+      amount,
+      photos,
       squareFeet,
       totalBedrooms,
       totalRooms,
+      amenities,
     },
   });
 
   return updatedFlat;
+};
+
+const getFlatByIdFromDB = async (id: any) => {
+  return await prisma.flat.findFirst({
+    where: {
+      id: id,
+    },
+  });
 };
 
 const deleteFlatByIdIntoDB = async (id: any) => {
@@ -160,5 +172,6 @@ export const FlatService = {
   getFlatsFromDB,
   UpdateFlatByIdIntoDB,
   deleteFlatByIdIntoDB,
+  getFlatByIdFromDB,
   getMyFlatFromDB,
 };

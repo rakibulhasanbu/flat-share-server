@@ -11,6 +11,15 @@ const userSchema = z.object({
   }),
 });
 
+const updateUserSchema = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    username: z.string().optional(),
+    email: z.string().optional(),
+    isActive: z.boolean().optional(),
+  }),
+});
+
 const userProfileUpdateSchema = z.object({
   body: z.object({
     name: z.string().optional(),
@@ -34,4 +43,5 @@ export const userValidationSchemas = {
   userSchema,
   userProfileSchema,
   userProfileUpdateSchema,
+  updateUserSchema,
 };

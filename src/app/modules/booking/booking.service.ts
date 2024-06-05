@@ -2,7 +2,7 @@ import prisma from "../../utils/prisma";
 
 const createBookingIntoBD = async (user: any, payload: any) => {
   const userId = user?.userId;
-  const { flatId, status = "PENDING" } = payload;
+  const { flatId, status = "PENDING", message } = payload;
 
   // Create the found item
   const createBooking = await prisma.booking.create({
@@ -10,14 +10,78 @@ const createBookingIntoBD = async (user: any, payload: any) => {
       flatId,
       status,
       userId,
+      message,
     },
   });
 
   return createBooking;
 };
 
+const getMyBookingsFromDB = async (user: any) => {
+  const result = await prisma.booking.findMany({
+    where: { userId: user?.userId },
+    include: {
+      flat: {
+        select: {
+          photos: true,
+          description: true,
+          advanceAmount: true,
+          amenities: true,
+          amount: true,
+          availability: true,
+          bookings: true,
+          location: true,
+          postedBy: true,
+          squareFeet: true,
+          totalRooms: true,
+          createdAt: true,
+          totalBedrooms: true,
+          postedById: true,
+          id: true,
+          updatedAt: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 const getBookingsFromDB = async () => {
-  const result = await prisma.booking.findMany();
+  const result = await prisma.booking.findMany({
+    include: {
+      flat: {
+        select: {
+          photos: true,
+          description: true,
+          advanceAmount: true,
+          amenities: true,
+          amount: true,
+          availability: true,
+          bookings: true,
+          location: true,
+          postedBy: true,
+          squareFeet: true,
+          totalRooms: true,
+          createdAt: true,
+          totalBedrooms: true,
+          postedById: true,
+          id: true,
+          updatedAt: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
   return result;
 };
@@ -41,5 +105,6 @@ const UpdateBookingByIdIntoDB = async (id: any, params: any) => {
 export const BookingService = {
   createBookingIntoBD,
   getBookingsFromDB,
+  getMyBookingsFromDB,
   UpdateBookingByIdIntoDB,
 };

@@ -76,6 +76,8 @@ const getAllUsersFromDB = async () => {
       id: true,
       username: true,
       email: true,
+      isActive: true,
+      role: true,
     },
   });
 
@@ -83,8 +85,7 @@ const getAllUsersFromDB = async () => {
 };
 
 const UpdateProfileIntoDB = async (user: any, params: any) => {
-  const { name, email, username, status } = params;
-
+  const { email, username, name } = params;
   const updatedProfile = await prisma.user.update({
     where: {
       id: user.userId,
@@ -97,10 +98,24 @@ const UpdateProfileIntoDB = async (user: any, params: any) => {
   });
   return updatedProfile;
 };
+const UpdateUserIntoDB = async (params: any) => {
+  const { id, isActive, role } = params;
+  const updatedUser = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      isActive,
+      role,
+    },
+  });
+  return updatedUser;
+};
 
 export const userService = {
   createUserIntoBD,
   getProfileFromDB,
+  UpdateUserIntoDB,
   getAllUsersFromDB,
   UpdateProfileIntoDB,
 };

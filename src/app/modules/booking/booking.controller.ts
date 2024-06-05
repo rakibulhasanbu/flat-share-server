@@ -17,6 +17,21 @@ const createBooking = CatchAsync(
   }
 );
 
+const getMyBookings = CatchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const user = req?.user;
+
+    const result = await BookingService.getMyBookingsFromDB(user);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Bookings requests  retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 const getBookings = CatchAsync(async (req: Request, res: Response) => {
   const result = await BookingService.getBookingsFromDB();
 
@@ -30,7 +45,7 @@ const getBookings = CatchAsync(async (req: Request, res: Response) => {
 
 const updateBookingById = CatchAsync(async (req: Request, res: Response) => {
   const { bookingId } = req.params;
-
+  console.log(bookingId, req?.body);
   const result = await BookingService.UpdateBookingByIdIntoDB(
     bookingId,
     req.body
@@ -47,5 +62,6 @@ const updateBookingById = CatchAsync(async (req: Request, res: Response) => {
 export const BookingController = {
   createBooking,
   getBookings,
+  getMyBookings,
   updateBookingById,
 };

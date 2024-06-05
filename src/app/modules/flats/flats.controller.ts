@@ -43,6 +43,19 @@ const getMyFlats = CatchAsync(
   }
 );
 
+const getFlatById = CatchAsync(async (req: Request, res: Response) => {
+  const { flatId } = req.params;
+
+  const result = await FlatService.getFlatByIdFromDB(flatId);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Flat information retrieved successfully",
+    data: result,
+  });
+});
+
 const updateFlatById = CatchAsync(async (req: Request, res: Response) => {
   const { flatId } = req.params;
 
@@ -73,6 +86,7 @@ export const FlatController = {
   createFlat,
   getFlats,
   updateFlatById,
+  getFlatById,
   getMyFlats,
   deleteFlatById,
 };

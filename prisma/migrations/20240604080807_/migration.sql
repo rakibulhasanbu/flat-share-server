@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
+-- CreateEnum
+CREATE TYPE "UserRoles" AS ENUM ('USER', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -8,7 +11,8 @@ CREATE TABLE "users" (
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "role" TEXT DEFAULT 'USER',
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "role" "UserRoles" DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

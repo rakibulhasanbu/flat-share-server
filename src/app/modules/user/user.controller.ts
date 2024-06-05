@@ -30,6 +30,21 @@ const getProfile = CatchAsync(
   }
 );
 
+const getUsers = CatchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const user = req.user;
+
+    const result = await userService.getAllUsersFromDB();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User users retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 const updateProfile = CatchAsync(
   async (req: Request & { user?: any }, res: Response) => {
     const user = req.user;
@@ -45,8 +60,21 @@ const updateProfile = CatchAsync(
   }
 );
 
+const updateUser = CatchAsync(async (req: Request, res: Response) => {
+  const result = await userService.UpdateUserIntoDB(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User updated successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   createUser,
   getProfile,
+  getUsers,
   updateProfile,
+  updateUser,
 };
