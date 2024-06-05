@@ -36,8 +36,8 @@ const createFlatIntoBD = async (user: any, payload: any) => {
 };
 
 const getFlatsFromDB = async (query: any) => {
-  const { searchTerm, page = 1, limit = 10, totalBedrooms } = query;
-  console.log(totalBedrooms);
+  const { searchTerm, totalBedrooms, minPrice, maxPrice } = query;
+
   // Prepare filters
   let where: any = {};
 
@@ -52,11 +52,29 @@ const getFlatsFromDB = async (query: any) => {
     where.totalBedrooms = parsedTotalBedrooms;
   }
 
+  const parsedMinPrice = Number(minPrice);
+  const parsedMaxPrice = Number(maxPrice);
+
+  if (!isNaN(parsedMinPrice) && parsedMinPrice >= 0) {
+    where.amount = { ...where.amount, gte: parsedMinPrice };
+  }
+
+  if (!isNaN(parsedMaxPrice) && parsedMaxPrice >= 0) {
+    where.amount = { ...where.amount, lte: parsedMaxPrice };
+  }
+
   // Retrieve paginated and filtered found items
   const foundItems = await prisma.flat.findMany({
     where,
-    take: Number(limit),
-    skip: (Number(page) - 1) * Number(limit),
+    include: {
+      postedBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
 
   const total = await prisma.flat.count({ where });
@@ -64,8 +82,6 @@ const getFlatsFromDB = async (query: any) => {
   const responseData = {
     meta: {
       total,
-      page: Number(page),
-      limit: Number(limit),
     },
     data: foundItems,
   };
@@ -75,7 +91,7 @@ const getFlatsFromDB = async (query: any) => {
 
 const getMyFlatFromDB = async (user: any) => {
   // Update the Blog status
-  const blog = await prisma.flat.findMany({
+  const flat = await prisma.flat.findMany({
     where: {
       postedById: user?.userId,
     },
@@ -90,7 +106,7 @@ const getMyFlatFromDB = async (user: any) => {
     },
   });
 
-  return blog;
+  return flat;
 };
 
 const UpdateFlatByIdIntoDB = async (id: any, params: any) => {

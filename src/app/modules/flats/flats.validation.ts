@@ -17,8 +17,8 @@ const flatSchema = z.object({
 export const updateFlatSchema = z.object({
   body: z.object({
     squareFeet: z.number().int().positive().optional(),
-    totalBedrooms: z.number().int().positive().min(1).max(4).optional(),
-    totalRooms: z.number().int().positive().min(1).max(6).optional(),
+    totalBedrooms: z.number().int().positive().min(1).optional(),
+    totalRooms: z.number().int().positive().min(1).optional(),
     utilitiesDescription: z.string().optional(),
     location: z.string().optional(),
     description: z.string().optional(),
