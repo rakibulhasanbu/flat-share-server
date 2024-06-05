@@ -7,10 +7,12 @@ import globalErrorHandler from "./middlewares/globalErrorHandler";
 const app: Application = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://blogify1.vercel.app"],
+    origin: true,
     credentials: true,
   })
 );
+
+app.options("*", cors());
 
 //parser
 app.use(express.json());
