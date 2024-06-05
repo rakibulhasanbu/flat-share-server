@@ -36,47 +36,25 @@ const createFlatIntoBD = async (user: any, payload: any) => {
 };
 
 const getFlatsFromDB = async (query: any) => {
-  const {
-    searchTerm,
-    page = 1,
-    limit = 10,
-    sortBy,
-    sortOrder,
-    availability,
-  } = query;
-
+  const { searchTerm, page = 1, limit = 10, totalBedrooms } = query;
+  console.log(totalBedrooms);
   // Prepare filters
   let where: any = {};
 
   if (searchTerm) {
     where = {
-      OR: [
-        { location: { contains: searchTerm as string, mode: "insensitive" } },
-        {
-          description: { contains: searchTerm as string, mode: "insensitive" },
-        },
-        {
-          utilitiesDescription: {
-            contains: searchTerm as string,
-            mode: "insensitive",
-          },
-        },
-      ],
+      location: { contains: searchTerm as string, mode: "insensitive" },
     };
   }
-  if (availability) {
-    where.availability = availability === "true" ? true : false;
-  }
 
-  // Prepare sorting
-  const orderBy = sortBy
-    ? { [sortBy as string]: sortOrder || "asc" }
-    : undefined;
+  const parsedTotalBedrooms = Number(totalBedrooms);
+  if (!isNaN(parsedTotalBedrooms) && parsedTotalBedrooms > 0) {
+    where.totalBedrooms = parsedTotalBedrooms;
+  }
 
   // Retrieve paginated and filtered found items
   const foundItems = await prisma.flat.findMany({
     where,
-    orderBy,
     take: Number(limit),
     skip: (Number(page) - 1) * Number(limit),
   });
